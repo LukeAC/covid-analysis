@@ -5,6 +5,10 @@ def preprocessing(
     df: pd.DataFrame,
     threshold: int = None,
 ) -> pd.DataFrame:
+    """
+    Returns processed df. Converts input df to use a DateTimeIndex, and
+    applies a threshold on number of 'Confirmed' cases if one is supplied.
+    """
 
     df["Date"] = pd.to_datetime(df["Date"])
     df = df.sort_values(by=["Date"], ascending=True)

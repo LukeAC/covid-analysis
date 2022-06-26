@@ -9,6 +9,11 @@ today = "{}".format(dt.date.today())
 
 
 def get_locations():
+    """
+    Returns json of available locations (countries) for which data
+    can be queried from the free Covid-19 API 
+    """
+    
     url = f"https://api.covid19api.com/countries"
     r = requests.get(url=url)
     return r.json()
@@ -20,6 +25,11 @@ def get_data(
     first_n_days: int = None,
     preprocess: bool = True,
 ) -> pd.DataFrame:
+    """
+    Returns pd.DataFrame of API response for the specified country.
+    If first_n_days, and threshold are provided: applies a filter to only
+    return the first N days after a threshold of 'Confirmed' cases is surpassed.
+    """
 
     url = f"https://api.covid19api.com/dayone/country/{country}"
     r = requests.get(url=url)
