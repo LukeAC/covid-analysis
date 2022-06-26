@@ -27,8 +27,8 @@ def plot_initial_growth(
 
     # clean up plot
     ax.set(ylabel=f"Number of Cases ({case_type})")
-    dtfmt = mdates.DateFormatter("%m-%y")
-    ax.xaxis.set_major_formatter(dtfmt)
+    # dtfmt = mdates.DateFormatter("%m-%y")
+    # ax.xaxis.set_major_formatter(dtfmt)
     plt.xticks(rotation=45)
     fig.set_title(title)
 

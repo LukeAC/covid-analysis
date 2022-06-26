@@ -19,7 +19,6 @@ def get_data(
     threshold: int = None,
     first_n_days: int = None,
     preprocess: bool = True,
-    pivot: bool = False,
 ) -> pd.DataFrame:
 
     url = f"https://api.covid19api.com/dayone/country/{country}"
@@ -41,7 +40,7 @@ def get_data(
     else:
         df = pd.DataFrame(r.json())
         if preprocess:
-            df = preprocessing(df, threshold=threshold, pivot=pivot)
+            df = preprocessing(df, threshold=threshold)
         if first_n_days:
             df = df.iloc[:first_n_days]
 
@@ -53,10 +52,9 @@ def batch_get_data(
     threshold: int = None,
     first_n_days: int = None,
     preprocess: bool = True,
-    pivot: bool = False,
 ) -> pd.DataFrame:
     return pd.concat(
-        get_data(country, threshold, first_n_days, preprocess, pivot)
+        get_data(country, threshold, first_n_days, preprocess)
         for country in countries
         if time.sleep(0.1) is None
         # Adding sleep here to not risk bothering the API
