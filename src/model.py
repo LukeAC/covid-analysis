@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 
 
-def holt(y_train, smoothing_level=0.5, smoothing_slope=0.1, forecast_period=50):
+def holt(y_train: pd.Series, smoothing_level: float=0.5, smoothing_slope: float=0.1, forecast_period: int=50) -> tuple:
     """
     Fits two Holt models (with/without exponential argument), and returns forecast
     predictions (type pd.Series) from each model for the number of time units
@@ -21,7 +21,7 @@ def holt(y_train, smoothing_level=0.5, smoothing_slope=0.1, forecast_period=50):
     return fcast1, fcast2
 
 
-def evaluate_model(y_obs, y_pred):
+def evaluate_model(y_obs: pd.Series, y_pred: pd.Series) -> pd.DataFrame:
     """
     Returns pd.DataFrame containing root-mean-square error and
     mean-absolute-percentage error of model predictions
