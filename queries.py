@@ -15,44 +15,49 @@ def get_locations():
 
 
 def get_data(
-    countries: list = ["Canada"],
+    country: str = "Canada",
     threshold: int = None,
     first_n_days: int = None,
+    preprocess: bool = True,
+    pivot: bool = False,
 ) -> pd.DataFrame:
 
-    country_dfs = []
+    url = f"https://api.covid19api.com/dayone/country/{country}"
+    r = requests.get(url=url)
 
-    for loc in countries:
-        url = f"https://api.covid19api.com/dayone/country/{loc}"
-        r = requests.get(url=url)
-
-        if len(r.json()) < 2:
-            available_countries = get_locations()
-            suggestions = [
-                x["Country"]
-                for x in available_countries
-                if x["Country"].startswith(loc[0].upper())
-            ]
-            raise (
-                ValueError(
-                    f"{loc} is not a valid country name. Country names starting with '{loc[0].upper()}' include {', '.join(suggestions)}"
-                )
+    if len(r.json()) < 2:
+        available_countries = get_locations()
+        suggestions = [
+            x["Country"]
+            for x in available_countries
+            if x["Country"].startswith(country[0].upper())
+        ]
+        raise (
+            ValueError(
+                f"{country} is not a valid country name. Country names starting with '{country[0].upper()}' include {', '.join(suggestions)}"
             )
+        )
 
-        else:
-            df = preprocessing(pd.DataFrame(r.json()), threshold=threshold)
-
-            if first_n_days:
-                df = df.iloc[:first_n_days]
-            else:
-                pass
-
-            country_dfs.append(df)
-
-        time.sleep(
-            0.1
-        )  # Just so that we don't get flagged if querying many countries at once
-
-    df = pd.concat(i for i in country_dfs)
+    else:
+        df = pd.DataFrame(r.json())
+        if preprocess:
+            df = preprocessing(df, threshold=threshold, pivot=pivot)
+        if first_n_days:
+            df = df.iloc[:first_n_days]
 
     return df
+
+
+def batch_get_data(
+    countries: list,
+    threshold: int = None,
+    first_n_days: int = None,
+    preprocess: bool = True,
+    pivot: bool = False,
+) -> pd.DataFrame:
+    return pd.concat(
+        get_data(country, threshold, first_n_days, preprocess, pivot)
+        for country in countries
+        if time.sleep(0.1) is None
+        # Adding sleep here to not risk bothering the API
+    )
