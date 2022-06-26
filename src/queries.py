@@ -3,7 +3,7 @@ import requests
 import pandas as pd
 import time
 
-from preprocessing import preprocessing
+from .preprocessing import preprocessing
 
 today = "{}".format(dt.date.today())
 

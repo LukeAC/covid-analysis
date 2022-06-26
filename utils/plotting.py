@@ -1,4 +1,4 @@
-from queries import get_data
+from src.queries import get_data
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
